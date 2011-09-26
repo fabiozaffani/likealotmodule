@@ -1,0 +1,3 @@
+{if $enable}
+	{$clear}
+{/if}
