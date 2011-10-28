@@ -1,7 +1,7 @@
-This module was proudly brought to you by the iLet Develop Team :: http://www.ilet.com.br
+This module was proudly brought to you by the Plulz Develop Team :: http://www.plulz.com
 ---------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-You can find more info about us at http://www.ilet.com.br/blog/prestashop-modules/
+You can find more info about us at http://www.plulz.com/prestashop-modules/
 
 We also have some other free modules available :D

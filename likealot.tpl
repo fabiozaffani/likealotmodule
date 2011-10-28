@@ -5,7 +5,7 @@
         action="{$action}" 
         show_faces="{$faces}"
         send="{$send}"
-        width="300" 
+        width="{$width}"
         height="23" 
         font="Arial">
      </fb:like>

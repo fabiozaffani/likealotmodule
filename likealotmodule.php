@@ -18,8 +18,8 @@ class likealotmodule extends Module
 	{
 		$this->name = 'likealotmodule';
 		$this->tab = 'front_office_features';
-		$this->version = 1.2;
-		$this->author = 'iLet Develop Team';
+		$this->version = 1.3;
+		$this->author = 'Plulz Develop Team';
 		$this->need_instance = 0;
 				
 		parent::__construct();
@@ -38,8 +38,9 @@ class likealotmodule extends Module
 			!$this->registerHook('footer') OR
 			!Configuration::updateValue('LIKE_SHARE', 1) OR
 			!Configuration::updateValue('LIKE_ALREADYFACE', 0) OR
-			!Configuration::updateValue('LIKE_FACEBOOK_APP_ID', '168421886551926') OR
+			!Configuration::updateValue('LIKE_FACEBOOK_APP_ID', '') OR
 			!Configuration::updateValue('LIKE_FACEBOOK_APP_LANG', 'en_US') OR
+            !Configuration::updateValue('LIKE_FACEBOOK_WIDTH', 300) OR
 			!Configuration::updateValue('LIKE_FACEBOOK_FACES', 0) OR
 			!Configuration::updateValue('LIKE_FACEBOOK_SEND', 1) OR
 			!Configuration::updateValue('LIKE_FACEBOOK_BUTTON_TEXT', 'like')
@@ -82,6 +83,7 @@ class likealotmodule extends Module
 				Configuration::updateValue('LIKE_ALREADYFACE', Tools::getValue('alreadyFace'));
 				Configuration::updateValue('LIKE_FACEBOOK_APP_ID', Tools::getValue('appID'));
 				Configuration::updateValue('LIKE_FACEBOOK_APP_LANG', Tools::getValue('language'));
+                Configuration::updateValue('LIKE_FACEBOOK_WIDTH', Tools::getValue('width'));
 				Configuration::updateValue('LIKE_FACEBOOK_FACES', Tools::getValue('displayFaces'));
 				Configuration::updateValue('LIKE_FACEBOOK_SEND', Tools::getValue('displaySend'));
 				Configuration::updateValue('LIKE_FACEBOOK_BUTTON_TEXT', Tools::getValue('textLike'));
@@ -89,53 +91,76 @@ class likealotmodule extends Module
 			}
 		}
 
+        $appId = Configuration::get('LIKE_FACEBOOK_APP_ID');
+
+        if (empty($appId))
+        {
+            $alertMsg = '<div class="margin-form" style="padding:0 0 1em 100px;">
+			                <p style="color:red;">
+                                Your module will not work until you insert your Facebook APP ID.
+                                Need Help? Know <a href="http://www.plulz.com/how-to-create-a-facebook-app" target="_blank" style="color:red;font-weight:bold;"><strong>How To Create your Facebook App</strong></a>
+			                </p>
+			            </div>';
+        }
+
 		$this->_html .= '
-		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">';
+		<form style="position:relative;" action="'.$_SERVER['REQUEST_URI'].'" method="post">';
 				
 		// LIKE BUTTON
 		$this->_html .='
+		<div style="position:absolute;top:40px;right:7px;background:#7B0099;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;color:#ffffff;width:170px;height:150px;border:2px solid #7B0099;padding:15px;">
+		<p style="padding-bottom:25px;text-align:center;">I spend a lot of time making and improving this plugin, any donation would be very helpful for me, thank you very much :)</p>
+		<form id="paypalform" action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_s-xclick"><input type="hidden" name="hosted_button_id" value="NMR62HAEAHCRL"><input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!"><img alt="" border="0" src="https://www.paypalobjects.com/pt_BR/i/scr/pixel.gif" width="1" height="1"></form>
+		</div>
 		<fieldset>
 			<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Facebook Like Button').'</legend>
-			<div class="margin-form">
-				<label>'.$this->l('Have other Facebook Module?').'</label>
+			' . $alertMsg . '
+			<div class="margin-form" style="padding:0 0 1em 100px;">
+				<label style="width:162px;text-align:left;">'.$this->l('Have other Facebook Module?').'</label>
 				<input type="radio" name="alreadyFace" id="alreadyFace" value="1" '.(Configuration::get('LIKE_ALREADYFACE') ? 'checked="checked" ' : '').'/>
 				<label class="t" for="alreadyFace"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
 				<input type="radio" name="alreadyFace" id="notAlreadyFace" value="0" '.(!Configuration::get('LIKE_ALREADYFACE') ? 'checked="checked" ' : '').'/>
 				<label class="t" for="notAlreadyFace"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label><br/>
-				<small style="padding-left:90px">Check this box if you already have another Module using Facebook Integration.</small>
+				<small style="padding-left:164px;padding-top:10px;display:block;font-size:11px;">Check this <strong>only</strong> if you have other Module using Facebook Integration.</small>
 			</div>
 			<br/>
-			<div class="margin-form">
-				<label>'.$this->l('Facebook APP ID').'</label>
+			<div class="margin-form" style="padding:0 0 1em 100px;">
+				<label style="width:162px;text-align:left;">'.$this->l('Facebook APP ID').'</label>
 				<input type="text" name="appID" id="appID" value="'.(Configuration::get('LIKE_FACEBOOK_APP_ID')).'" /><br/>
-				<small style="padding-left:90px">Insert your own Facebook APP ID or use the module default one.</small>
+				<small style="padding-left:164px;padding-top:10px;display:block;font-size:11px;">Your Facebook APP ID. Need Help? <a href="http://www.plulz.com/how-to-create-a-facebook-app" target="_blank">How To Create a Facebook App</a></small>
 			</div>
 			<br/>
-			<div class="margin-form">
-				<label>'.$this->l('Facebook APP Language').'</label>
+			<div class="margin-form" style="padding:0 0 1em 100px;">
+				<label style="width:162px;text-align:left;">'.$this->l('Facebook APP Language').'</label>
 				<input type="text" name="language" id="language" value="'.(Configuration::get('LIKE_FACEBOOK_APP_LANG')).'" /><br/>
-				<small style="padding-left:90px">Choose your language. Examples: es_LA, pt_BR, en_US</small>				
+				<small style="padding-left:164px;padding-top:10px;display:block;font-size:11px;">Choose your language. Examples: pt_BR, en_US. Default to en_US</small>
 			</div>
 			<br/>
-			<div class="margin-form">
-				<label>'.$this->l('Show users pictures?').'</label>
+			<div class="margin-form" style="padding:0 0 1em 100px;">
+				<label style="width:162px;text-align:left;">'.$this->l('Like a Lot Width').'</label>
+				<input type="text" name="width" id="width" value="'.(Configuration::get('LIKE_FACEBOOK_WIDTH')).'" /><br/>
+				<small style="padding-left:164px;padding-top:10px;display:block;font-size:11px;">ONLY NUMBERS. Choose the width of the like box. Default to 300</small>
+			</div>
+			<br/>
+			<div class="margin-form" style="padding:0 0 1em 100px;">
+				<label style="width:162px;text-align:left;">'.$this->l('Show users pictures?').'</label>
 				<input type="radio" name="displayFaces" id="displayFaces" value="1" '.(Configuration::get('LIKE_FACEBOOK_FACES') ? 'checked="checked" ' : '').'/>
 				<label class="t" for="displayLike"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
 				<input type="radio" name="displayFaces" id="dontDisplayFaces" value="0" '.(!Configuration::get('LIKE_FACEBOOK_FACES') ? 'checked="checked" ' : '').'/>
 				<label class="t" for="displayRecommend"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 			</div>
 			<br/>	
-			<div class="margin-form">
-				<label>'.$this->l('Show Send Button?').'</label>
+			<div class="margin-form" style="padding:0 0 1em 100px;">
+				<label style="width:162px;text-align:left;">'.$this->l('Show Send Button?').'</label>
 				<input type="radio" name="displaySend" id="displaySend" value="1" '.(Configuration::get('LIKE_FACEBOOK_SEND') ? 'checked="checked" ' : '').'/>
 				<label class="t" for="displayLike"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
 				<input type="radio" name="displaySend" id="dontDisplaySend" value="0" '.(!Configuration::get('LIKE_FACEBOOK_SEND') ? 'checked="checked" ' : '').'/>
 				<label class="t" for="displayRecommend"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label><br/>
-				<small style="padding-left:90px">New feature from Facebook. Allows the user the send the page to a friend.</small>
+				<small style="padding-left:164px;padding-top:10px;display:block;font-size:11px;">Allows the user the send the page to a friend.</small>
 			</div>
 			<br/>
-			<div class="margin-form">
-				<label>'.$this->l('Choose Like button text').'</label>
+			<div class="margin-form" style="padding:0 0 1em 100px;">
+				<label style="width:162px;text-align:left;">'.$this->l('Choose Like button text').'</label>
 				<input type="radio" name="textLike" id="display_off" value="like" '.(Configuration::get('LIKE_FACEBOOK_BUTTON_TEXT') == 'like' ? 'checked="checked" ' : '').'/>
 				<label class="t" for="display_off"> Like </label>
 				<input type="radio" name="textLike" id="display_on" value="recommend" '.(Configuration::get('LIKE_FACEBOOK_BUTTON_TEXT') == 'recommend' ? 'checked="checked" ' : '').'/>
@@ -144,6 +169,7 @@ class likealotmodule extends Module
 			<br/>
 			<center><input type="submit" name="submitFace" value="'.$this->l('Save').'" class="button" /></center>
 		</fieldset><br/>';
+        
 		return $this->_html;
 	}
 
@@ -185,7 +211,7 @@ class likealotmodule extends Module
 	{
 		global $smarty;
 			
-		$thanks = '<span style="font-size:11px;font-color:#999999;font-style:italic;margin-top:11px;float:left">Module from the creators of <a href="http://www.guitarpro6.com.br" target="_blank">Guitar Pro</a> :: More at <a href="http://www.pazzanitech.com.br/prestashop-modules" target="_blank">Prestashop Modules</a></span>';
+		$thanks = '<span style="font-size:11px;font-color:#999999;font-style:italic;margin-top:11px;float:left">Module from the creators of <a href="http://www.guitarpro6.com.br" target="_blank">Guitar Pro</a> :: More at <a href="http://www.plulz.com/prestashop-modules" target="_blank">Prestashop Modules</a></span>';
 		
 		$smarty->assign(array(
 			'enable' => true,
@@ -211,10 +237,13 @@ class likealotmodule extends Module
 		else
 			$faceSend = 'false';
 
+        $width = Configuration::get('LIKE_FACEBOOK_WIDTH');
+
 		$smarty->assign(array(
 			'action' => Configuration::get('LIKE_FACEBOOK_BUTTON_TEXT'),
 			'faces' => $faceFaces,
-			'send' => $faceSend
+			'send' => $faceSend,
+            'width' => $width
 		));
 		return $this->display(__FILE__, 'likealot.tpl');
 	}
