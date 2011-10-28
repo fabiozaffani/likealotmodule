@@ -104,14 +104,16 @@ class likealotmodule extends Module
         }
 
 		$this->_html .= '
-		<form style="position:relative;" action="'.$_SERVER['REQUEST_URI'].'" method="post">';
-				
-		// LIKE BUTTON
-		$this->_html .='
-		<div style="position:absolute;top:40px;right:7px;background:#7B0099;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;color:#ffffff;width:170px;height:150px;border:2px solid #7B0099;padding:15px;">
+		<div style="position:absolute;top:300px;right:130px;background:#7B0099;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;color:#ffffff;width:170px;height:150px;border:2px solid #7B0099;padding:15px;">
 		<p style="padding-bottom:25px;text-align:center;">I spend a lot of time making and improving this plugin, any donation would be very helpful for me, thank you very much :)</p>
 		<form id="paypalform" action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_s-xclick"><input type="hidden" name="hosted_button_id" value="NMR62HAEAHCRL"><input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!"><img alt="" border="0" src="https://www.paypalobjects.com/pt_BR/i/scr/pixel.gif" width="1" height="1"></form>
 		</div>
+		
+		<form action="'.$_SERVER['REQUEST_URI'].'" method="post">';
+				
+		// LIKE BUTTON
+		$this->_html .='
+
 		<fieldset>
 			<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Facebook Like Button').'</legend>
 			' . $alertMsg . '
