@@ -1,31 +1,10 @@
-{* Here we are embending the SDK Asynchornously *}
 {if !$alreadyface}
-    <div id="fb-root"></div>
-    <script type="text/javascript">
-        var locProt = "//connect.facebook.net/{$lang}/all.js";
-        {literal}
-            window.fbAsyncInit = function() {
-                FB.init({
-                    appId: {/literal}{$app_id}{literal}, 
-                    status: true, 
-                    cookie: true,
-                    xfbml: true
-                });
-                fbInitializedCallback()
-            };
-            (function() {
-                var e = document.createElement('script'); 
-                e.src = document.location.protocol + locProt;
-                e.async = true;
-                document.getElementById('fb-root').appendChild(e);
-            }());
-            function fbInitializedCallback()
-            {
-                if (typeof fbInitializedLike == 'function')
-                    fbInitializedLike();
-                if (typeof fbInitializedCreateAccount == 'function')
-                    fbInitializedCreateAccount();
-            }
-        {/literal}
-    </script>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/{$lang}/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 {/if}
